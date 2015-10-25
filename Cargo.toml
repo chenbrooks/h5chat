@@ -1,0 +1,23 @@
+[package]
+name = "h5chat"
+version = "0.1.0"
+authors = ["Daogang Tang <daogangtang@126.com>"]
+
+
+[dependencies]
+rustc-serialize = "*" 
+iron = "*"
+persistent = "*"
+router = "*" 
+mount = "*" 
+staticfile = "*"
+
+rustorm = "*"
+r2d2 = "*"
+r2d2_postgres = "*"
+
+uuid = "*"
+chrono = "*"
+handlebars-iron = "*"
+
+
