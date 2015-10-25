@@ -7,9 +7,6 @@ extern crate rustorm;
 extern crate uuid;
 extern crate chrono;
 extern crate rustc_serialize;
-extern crate r2d2;
-extern crate r2d2_postgres;
- 
 
 
 use rustorm::dao::{Dao, IsDao};
@@ -17,7 +14,6 @@ use rustorm::pool::ManagedPool;
 use rustorm::table::Table;
 use rustorm::table::IsTable;
 use rustorm::query::Query;
-
 
 use std::env;
 use std::net::*;
@@ -36,9 +32,6 @@ use persistent::Read as PersistRead;
 // define this to use it with iron persistance cache plugin
 pub struct AppDB;
 impl Key for AppDB { type Value = ManagedPool; }
-
-
-
 
 
 
@@ -117,9 +110,7 @@ fn main() {
     println!("connecting to postgres: {}", db_url);
 
     // here intro rustorm pool
-    //let ManagedPool::Postgres(inner_pool) = ManagedPool::init(&db_url, 4).unwrap();
     let pool = ManagedPool::init(&db_url, 4).unwrap();
-    //let db = pool.connect().unwrap();
     
     // router
     let mut router = Router::new();
@@ -136,7 +127,6 @@ fn main() {
     let mut middleware = Chain::new(mount);
     // put db connect pool to persistance cache
     middleware.link(PersistRead::<AppDB>::both(pool));
-    //middleware.link(PersistRead::<AppDB>::both(db));
 
     // http server
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
