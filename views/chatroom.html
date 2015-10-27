@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes"> 
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+        <meta name="keywords" content="母婴,专家,咨询" />
+        <meta name="description" content="妈咪问问是一个母婴在线实时咨询平台，免费提供就近的专家咨询服务，及时快速排除疑虑、解决问题。" />
+        
+        <title>咨询室</title>
+    	<script src="http://rest.gotye.com.cn/api/js?modules=im.core_1.3"></script>
+	<script src="http://223.203.225.167/components/emoji-parser/main4wx.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<style>
+.face{
+  width: 24px;
+  height: 24px;
+}
+body,ul,li {
+    padding:0;
+    margin:0;
+    border:0;
+}
+
+a {
+    text-decoration : none;
+}
+
+body {
+    position: relative;
+    font-size:12px;
+/*    -webkit-user-select:none; */
+    -webkit-text-size-adjust:none;
+    font-family:helvetica;
+}
+body.bottom {
+	padding-bottom:1px;
+}
+.absolute-layout #mmww-layout {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  background: #fff;
+}
+.absolute-layout #footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+#header {
+    position:fixed;
+	border-bottom:  solid 1px;
+    z-index:2;
+    top:0; left:0;
+    width:100%;
+    height:45px;
+    line-height:45px;
+    
+    /*background-image: -webkit-linear-gradient(top, #36afa5, #3f887f);*/
+    /*background-image: linear-gradient(top, #36afa5, #3f887f);*/
+    /*background-color: #36afa5;*/
+
+    /*background-color:#36afa5/* #555 */
+    /* background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #fe96c9), color-stop(0.05, #d51875), color-stop(1, #7b0a2e)); */
+    /* background-image:-moz-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e); */
+    /* background-image:-o-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e); */
+    padding:0;
+    color:#fff;
+    font-size:20px;
+    text-align:center;
+}
+
+#header a {
+    color:#f3f3f3;
+    text-decoration:none;
+    font-weight:bold;
+    text-shadow:0 -1px 0 rgba(0,0,0,0.5);
+}
+#footer {
+  position:fixed;
+  bottom:0;
+  left:0;
+  z-index:2;
+  width:100%;
+  height:48px;
+  background-color: white;
+  /*margin-top:20px;*/
+  /* background-color:#222; */
+  /* background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222)); */
+  /* background-image:-moz-linear-gradient(top, #999, #666 2%, #222); */
+  /* background-image:-o-linear-gradient(top, #999, #666 2%, #222); */
+  padding:0;
+  border-top:1px solid #bbb;
+}
+#wrapper {
+    /*position:absolute; z-index:1;*/
+/*    top:45px; bottom:48px; left:0; */
+    width:100%;
+    height:100%;
+    background:whiteSmoke;
+    overflow:auto;
+    
+}
+#scroller {
+    /*position:absolute; z-index:1;*/
+    /*	-webkit-touch-callout:none;*/
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    width:100%;
+    display: inline-block;
+    /*overflow:hidden;*/
+    padding:0;
+    /*margin-top:46px;*/
+    margin-top:8px;
+    margin-bottom:49px;
+}
+#scroller ul {
+    list-style:none;
+    padding:0;
+    margin:0;
+    width:100%;
+    text-align:left;
+}
+#scroller li {
+    padding:0 10px;
+    /* height:40px; */
+    line-height:40px;
+    /* border-bottom:1px solid #ccc; */
+    /* border-top:1px solid #fff; */
+    /* background-color:#fafafa; */
+    font-size:14px;
+}
+/**
+ *
+ * Horizontal Scrollbar
+ *
+ */
+.myScrollbarH {
+	position:absolute;
+	z-index:100;
+	height:8px;
+	bottom:1px;
+	left:2px;
+	right:7px
+}
+
+.myScrollbarH > div {
+	position:absolute;
+	z-index:100;
+	height:100%;
+
+	/* The following is probably what you want to customize */
+	background-image:-webkit-gradient(linear, 0 0, 100% 0, from(#a00), to(#f00));
+	background-image:-moz-linear-gradient(top, #f00, #900);
+	background-image:-o-linear-gradient(top, #f00, #900);
+
+	border:1px solid #900;
+	-webkit-background-clip:padding-box;
+	-moz-background-clip:padding-box;
+	-o-background-clip:padding-box;
+	background-clip:padding-box;
+	
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+	
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	-o-border-radius:4px;
+	border-radius:4px;
+	
+	-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	-moz-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	-o-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+}
+
+
+/**
+ *
+ * Vertical Scrollbar
+ *
+ */
+.myScrollbarV {
+	position:absolute;
+	z-index:100;
+	width:8px;bottom:7px;top:2px;right:1px
+}
+
+.myScrollbarV > div {
+	position:absolute;
+	z-index:100;
+	width:100%;
+
+	/* The following is probably what you want to customize */
+	/* background:-webkit-gradient(linear, 0 0, 100% 0, from(#f00), to(#900)); */
+        background: #999;
+	/* background-image:-moz-linear-gradient(top, #f00, #900); */
+	/* background-image:-o-linear-gradient(top, #f00, #900); */
+
+	/* border:1px solid #900; */
+
+	-webkit-background-clip:padding-box;
+	-moz-background-clip:padding-box;
+	-o-background-clip:padding-box;
+	background-clip:padding-box;
+	
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+	
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	-o-border-radius:4px;
+	border-radius:4px;
+	
+	-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	-moz-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	-o-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+	box-shadow:inset 1px 1px 0 rgba(255,255,255,0.5);
+}
+html{font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+a:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px;}
+a:hover,a:active{outline:0;}
+sub,sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline;}
+sup{top:-0.5em;}
+sub{bottom:-0.25em;}
+img{max-width:100%;width:auto\9;height:auto;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic;}
+#map_canvas img,.google-maps img{max-width:none;}
+button,input,select,textarea{margin:0;font-size:100%;vertical-align:middle;}
+button,input{ *overflow:visible;line-height:normal;}
+button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0;}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{ -webkit-appearance:button;cursor:pointer;}
+input[type="search"]{ -webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-appearance:textfield;}
+input[type="search"]::-webkit-search-decoration,input[type="search"]::-webkit-search-cancel-button{ -webkit-appearance:none;}
+textarea{overflow:auto;vertical-align:top;}
+.clearfix{ *zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
+.clearfix:after{clear:both;}
+.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;color:#333333;background-color:whiteSmoke;}
+a{color:#0088cc;text-decoration:none;}
+a:hover{color:#005580;text-decoration:underline;}
+.img-rounded{ -webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
+.img-polaroid{padding:4px;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0, 0, 0, 0.2);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);}
+.img-circle{ -webkit-border-radius:500px;-moz-border-radius:500px;border-radius:500px;}
+.row{margin-left:-20px;*zoom:1;}.row:before,.row:after{display:table;content:"";line-height:0;}
+.row:after{clear:both;}
+[class*="span"]{float:left;min-height:1px;margin-left:20px;}
+
+select,textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{display:inline-block;height:20px;padding:4px 6px;margin-bottom:10px;font-size:14px;line-height:20px;color:#555555;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;vertical-align:middle;}
+
+textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{background-color:#ffffff;border:1px solid #cccccc;-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);-moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);-webkit-transition:border linear .2s, box-shadow linear .2s;-moz-transition:border linear .2s, box-shadow linear .2s;-o-transition:border linear .2s, box-shadow linear .2s;transition:border linear .2s, box-shadow linear .2s;}textarea:focus,input[type="text"]:focus,input[type="password"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="date"]:focus,input[type="month"]:focus,input[type="time"]:focus,input[type="week"]:focus,input[type="number"]:focus,input[type="email"]:focus,input[type="url"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="color"]:focus,.uneditable-input:focus{border-color:rgba(82, 168, 236, 0.8);outline:0;outline:thin dotted \9;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);}
+
+
+.message .time {
+  color: #999;
+}
+
+.message .image {
+    width: 150px;
+    height: 150px;
+}
+
+.message .username {
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.message .content {
+  font-size: 16px;
+  float: left;
+  max-width: 70%;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #eaf7fd;
+  box-shadow: 0 0 2px rgba(0,0,0,0.20);
+  table-layout: fixed;
+  word-break: break-all;
+  border: 1px solid #ccc;
+  display: block;
+  padding: 10px;
+  position: relative;
+}
+.message.not-me .content {
+  color: #335;
+}
+.message.not-me .content::before {
+  border-right: 7px solid #ccc;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  content: "";
+  display: inline-block;
+  left: -7px;
+  position: absolute;
+  top: 11px;
+}
+.message.not-me .content::after {
+  border-right: 6px solid #eaf7fd;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  content: "";
+  display: inline-block;
+  left: -6px;
+  position: absolute;
+  top: 12px;
+}
+.message.me .username {
+  float: right;
+  text-align: right;
+}
+.message.me .content {
+  float: right;
+  background-color: #f9f9f9;
+}
+.message.me .content::before {
+  border-left: 7px solid #ccc;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  content: "";
+  display: inline-block;
+  right: -7px;
+  position: absolute;
+  top: 11px;
+}
+.message.me .content::after {
+  border-left: 6px solid #f9f9f9;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  content: "";
+  display: inline-block;
+  right: -6px;
+  position: absolute;
+  top: 12px;
+}
+.message.me .time {
+  text-align: right;
+}
+/*
+* {
+  font-size: 16px;
+}
+*/
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.clearfix {
+  display: inline-table;
+}
+/* Hides from IE-mac \*/
+* html .clearfix {
+  height: 1%;
+}
+.clearfix {
+  display: block;
+}
+/* End hide from IE-mac */
+.button {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0,0,0,0.10) rgba(0,0,0,0.10) rgba(0,0,0,0.25);
+  /*border: 1px solid #11534c;*/
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+
+/*
+  background-image: -webkit-linear-gradient(top, #36afa5, #3f887f);
+  background-image: linear-gradient(top, #36afa5, #3f887f);
+  background-color: #36afa5;
+*/
+
+  color: #fff;
+  font-size: 16px;
+}
+#message-wrapper {
+  margin: 8px 90px 0 78px;
+}
+#message {
+  font-size: 16px;
+  height: 22px;
+  line-height: 22px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+#show_emots {
+  float: left;
+  margin: 9px 0 0 5px;
+  display: block;
+}
+#show_emots img {
+  width: 28px;
+  height: 28px;
+  margin:1px;
+}
+
+#camera {
+  float: left;
+  margin: 8px 0 0 5px;
+  display: block;
+}
+#camera img {
+  width: 30px;
+  height: 30px;
+  margin:1px;
+}
+
+#send {
+  float: right;
+  margin: 9px 10px 0 0;
+}
+/*#wrapper {
+  background: whiteSmoke;
+  padding-bottom: 48px;
+  overflow: hidden;
+}*/
+#messages {
+  padding: 0 25px 10px 20px;
+  height: 100%;
+}
+#messages .message {
+  margin-top: 15px;
+}
+#messages .message .time {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+#emots_wrapper {
+  display: none;
+  z-index: 999;
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  box-shadow: 0px -10px 10px #eee;
+}
+#emots {
+  margin-top: 15px;
+}
+#emots a {
+  width: 14.28%;
+  text-align: center;
+  display: block;
+  float: left;
+  height: 35px;
+}
+#emots a img {
+  height: 75%;
+}
+
+.content span img {
+  width: 27px;
+}
+.picture img {
+  width: 160px;
+}
+
+#hide_emots {
+  margin: 5px 10px 5px 0;
+}
+#header {
+  box-shadow: 0px 10px 18px #ccc;
+  text-align: left;
+  height: 45px;
+}
+#header .logo {
+  cursor: pointer;
+/*  margin: 10px 8px 0 10px;
+  width: 50px;
+  height: 50px;
+*/
+  margin: 2px 8px 0 10px;
+  width: 40px;
+  height: 40px;
+  /*box-shadow: 0px 0px 3px #11534c;*/
+}
+#header span {
+  /*margin-left: 1em;*/
+  font-size: 16px;
+}
+.sending {
+  margin: 5px 6px 2px 0;
+  width: 16px;
+  height: 16px;
+  background-image: url(/image/ajax-loader.gif);  
+  background-repeat: no-repeat;
+  display: inline-block;
+  float: right;
+  background-size: 16px 16px;
+}
+.arrived {
+  margin: 5px 6px 2px 0;
+  padding: 2px;
+  line-height: 10px;
+  font-size: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: rgb(148, 197, 100);
+  color: #fff;
+  display: inline-block;
+  float: right;
+}
+.readed {
+  margin: 5px 6px 2px 0;
+  padding: 2px;
+  line-height: 10px;
+  font-size: 10px;
+  border-radius: 3px;
+  background-color: rgb(148, 197, 100);
+  color: #fff;
+  display: inline-block;
+  float: right;
+}
+.fail {
+  background-repeat: no-repeat;
+  display: block;
+  float: right;
+  margin-right: 5px;
+  margin-top: 5px;
+  color: #fff;
+  padding: 1px 5px;
+  line-height: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #df1e1e;
+
+}
+/*#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}*/
+#horizontal-scroll {
+  display: inline-block;
+  width: 192px;
+  overflow-x: hidden;
+  /*margin-left: 16px;*/
+  position:absolute;
+  top:0;
+  line-height:56px;
+}
+#in-scroll {
+  white-space: nowrap;
+  width: auto;
+  display: inline-block;
+  margin-left: 0;
+}
+#tooltip {
+  background: rgb(7, 7, 7);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 10px 0px;
+  color: #fff;
+  display: block;
+  border: 1px solid #ebebeb;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 999;
+  position:absolute;
+  width:28px;
+  height:20px;
+  font-size: 12px;
+  text-align: center
+}
+.mc-label {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #999999;
+  vertical-align: baseline;
+  white-space: nowrap;
+  margin: auto; 
+  /*border: 1px solid #ebebeb;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  */
+
+}
+#more-msg {
+  background-color: #3a87ad;
+  color: white;
+  /*display:none;*/
+}
+#loading {
+  margin: auto;
+  height:16px;
+  font-weight: bold;
+  display: none;
+}
+#msg-loading {
+  margin: auto;
+  height:16px;
+  width:16px;
+  display: none;
+}
+#unit-phone {
+  float:right;
+}
+a:focus {  
+    outline:none;  
+}
+
+/* window color style */
+.color-default#send {
+	border:1px solid #257E74
+}
+.color-default#header {
+	border-bottom:1px solid #257E74
+}
+.color-default {
+  background-color: #36afa5;
+  background-image: -webkit-linear-gradient(top, #36afa5, #3f887f);
+  background-image: linear-gradient(top, #36afa5, #3f887f);
+}
+
+.color-gray#send {
+	border:1px solid #c0c0c0
+}
+.color-gray#header {
+	border-bottom:1px solid #c0c0c0
+}
+.color-gray {
+  background-color: #bdbdbd;
+  background-image: -webkit-linear-gradient(top, #bdbdbd, #8a8a8a);
+  background-image: linear-gradient(top, #bdbdbd, #8a8a8a);
+}
+
+.color-blue#send {
+	border:1px solid #144090
+}
+.color-blue#header {
+	border-bottom:1px solid #144090
+}
+.color-blue {
+  background-color: #5082DB;
+  background-image: -webkit-linear-gradient(top, #5082DB, #206A9C);
+  background-image: linear-gradient(top, #5082DB, #206A9C);
+}
+
+.color-green#send {
+	border:1px solid #159a39
+}
+.color-green#header {
+	border-bottom:1px solid #159a39
+}
+.color-green {
+  background-color: #17BD36;
+  background-image: -webkit-linear-gradient(top, #17BD36, #2D7D4D);
+  background-image: linear-gradient(top, #17BD36, #2D7D4D);
+}
+
+.color-red#send {
+	border:1px solid #bf3309
+}
+.color-red#header {
+	border-bottom:1px solid #bf3309
+}
+.color-red {
+  background-color: #E51818;
+  background-image: -webkit-linear-gradient(top, #E51818, #991111);
+  background-image: linear-gradient(top, #E51818, #991111);
+}
+
+.color-purple#send {
+	border:1px solid #aa476f
+}
+.color-purple#header {
+	border-bottom:1px solid #aa476f
+}
+.color-purple {
+  background-color: #E260A0;
+  background-image: -webkit-linear-gradient(top, #E260A0, #93177B);
+  background-image: linear-gradient(top, #E260A0, #93177B);
+}
+
+.color-orange#send {
+	border:1px solid #b57112
+}
+.color-orange#header {
+	border-bottom:1px solid #b57112
+}
+.color-orange {
+  background-color: #EB9317;
+  background-image: -webkit-linear-gradient(top, #EB9317, #A56506);
+  background-image: linear-gradient(top, #EB9317, #A56506);
+}
+
+#mmww-layout {
+ 	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.subscribe_mmww_layer {
+    display: none;
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+    text-align: center;
+    background-color: white;
+    opacity: 0.88;
+    padding-top: 30px;
+    width: 98%;
+    height: 100%;
+}
+
+.subscribe_mmww_layer .caption {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.subscribe_mmww_layer .qrcode img {
+    margin: auto;
+    width: 260px;
+}
+
+.modal_update_nickname {
+    display: none;
+    z-index: 999;
+    position: fixed;
+    top: 25%;
+    background-color: white;
+    border-radius: 6px;
+    opacity: 1.0;
+    padding: 15px;
+    width: 60%;
+    left: 16%;
+    font-size: 16px;
+    border: solid #ff7f98 2px;
+}
+
+.modal_update_nickname .caption {
+    padding-bottom: 10px;
+
+}
+
+.modal_update_nickname .nicknamepart {
+    padding-bottom: 5px;
+}
+
+.modal_update_nickname input {
+    height: 32px;
+    width: 82%;
+    font-size: 15px;
+}
+.buttons button {
+    width: 72px;
+    height: 30px;
+}
+</style>
+    </head>
+    
+    <body>
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================================== -->
+
+      <div id="mmww-layout">
+	<!-- 头部 -->
+	<!--
+        <div id="header" class="color-default">
+            <img onerror="this.src='http://223.203.225.167/images/logo96.png'" src="" id="logo" class="logo img-rounded">
+            <div id="horizontal-scroll">
+                <div id="in-scroll" style="margin-left:0">
+                    <span class="conname"></span>
+                    <span style="margin-left:0px;" class="usname">
+                    </span>
+                </div>
+            </div>
+        </div>
+	-->
+	<!-- 中部 -->
+        <div id="scroller">
+              <!-- <div id="copyright">
+                  <img src="/images/mmww.png" style="display: block; margin: 0 auto"> 
+              </div> -->
+              <div id="messages-prev-wrap" style="text-align:center;margin-top:10px;">
+                  <span id="loading" class='' style="display:inline-block">正在加载中...</span>
+                  <span id="more-msg" class='mc-label' style="display:none">加载更多</span>
+                  <img id="msg-loading" src="/image/ajax-loader.gif" style="display:none">
+              </div>
+              <div id="messages">
+              </div>
+        </div>
+	<!-- 底部 -->
+        <div id="footer">
+            <input type="hidden" value="" id="to" class="to">
+            <form action="javascript:;" id="send-message" class="clearfix">
+                <a href="###" id="camera" style="">
+                    <img src="http://223.203.225.167/images/camera.png">
+                </a>
+                <a href="###" id="show_emots">
+                    <img src="http://223.203.225.167/images/smile.png">
+                </a>
+                <input type="submit" value="发送" id="send" class="button color-default">
+                <div id="message-wrapper">
+                    <input id="message" name="" placeholder="" type="text" data-inline="true">
+                </div>
+            </form>
+        </div>
+        <div id="emots_wrapper" class="clearfix">
+            <div id="emots" class="clearfix">
+            </div>
+        </div>
+      </div>
+
+      <div class="subscribe_mmww_layer" id="subscribe_mmww_layer">
+          <div class="caption"><span>长按下方二维码关注 “妈咪问问”<br>即可参与聊天咨询</span></div> 
+          <div class="qrcode">
+            <img src="http://223.203.225.167/images/mw_qrcode2.jpg">
+          </div>
+      </div>
+      <div class="modal_update_nickname" id="modal_update_nickname">
+          <div class="nicknamepart">
+            <div class="caption">当前昵称：<span id="current_nickname"></span></div>
+            <input id="new_nickname" type="text" placeholder="请输入新昵称">
+          </div> 
+          <div class="buttons">
+            <button type="button" id="update_nickname_ensure"> 确定 </button> 
+	    &nbsp;
+	    &nbsp;
+            <button type="button" id="update_nickname_cancel"> 取消 </button> 
+          </div>
+      </div>
+
+<!-- =================================================== -->
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+window.onload = function () {
+	var emojiPath = "http://223.203.225.167/components/emoji-parser/emoji/";
+	var appId = "{{appId}}";
+	var nonceStr = "{{nonceStr}}";
+	var jsTimestamp = {{jsTimestamp}};
+	var signature = "{{signature}}";
+
+	var appkey = 'f10f3a8f-df79-424a-8aef-64d1cb972c25';
+	var userId = "{{userid}}";
+    var namePrefix = "{{name_prefix}}";
+    var my_fake_name = namePrefix + userId;
+	var userAccount = "{{username}}";
+	var userNickname = "{{nickname}}";
+	var userPwd = "{{userpwd}}";
+	var role = "{{role}}";
+	var roomId = {{roomId}};
+	var roomTitle = "{{roomTitle}}";
+	var roomLogo = "{{roomLogo}}";
+    // 加入修改昵称的按钮
+	var welcome = "{{welcome}}";
+	var wxurl = "{{wxurl}}";
+	var brandTitle = "{{brand_title}}";
+	var isPrivateRoom = "{{private_room}}";
+    var forceSub = "{{force_sub}}";
+    var roomExpert = "{{room_expert}}";
+    
+    var shortShare =  "{{short_share}}";  
+    var longShare =  "{{long_share}}";  
+    var welcome_explain = '友情提示：本聊天室为匿名聊天室，你的匿名ID是 ';
+    var replytouser = '';
+    var replytousername = '';
+
+	var historyPage = 0;
+	var endTime = (new Date()).getTime();
+	var loaded_emot_obj = false;
+	
+	var $bodyWrapper = document.getElementById("mmww-layout");
+	var $messages = document.getElementById("messages");
+  	var $scroller = document.getElementById('scroller');
+	var $sendMessage = document.getElementById('send-message');
+	var $message = document.getElementById('message');
+	var $loading = document.getElementById('loading');
+	var $moreMessage = document.getElementById('more-msg');
+	var $emotsWrapper = document.getElementById('emots_wrapper');
+	var $emots = document.getElementById('emots');
+	var $showEmots = document.getElementById('show_emots');
+	var $showCamera = document.getElementById('camera');
+	var $footer = document.getElementById('footer');
+	var log = function (info) {
+		var li = document.createElement("LI");	
+		li.innerHTML = "<p>" + info + "</p>";
+		$messages.appendChild(li);
+	};
+
+	document.title = roomTitle;
+	if (isPrivateRoom != "true") {
+		welcome = welcome + ' <a id="modify_my_nickname">修改昵称</a>';
+	}
+
+
+
+var base64DecodeChars = new Array(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
+/**
+ * base64解码
+ * @param {Object} str
+ */
+function base64decode(str){
+    var c1, c2, c3, c4;
+    var i, len, out;
+    len = str.length;
+    i = 0;
+    out = "";
+    while (i < len) {
+        /* c1 */
+        do {
+            c1 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+        }
+        while (i < len && c1 == -1);
+        if (c1 == -1) 
+            break;
+        /* c2 */
+        do {
+            c2 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+        }
+        while (i < len && c2 == -1);
+        if (c2 == -1) 
+            break;
+        out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
+        /* c3 */
+        do {
+            c3 = str.charCodeAt(i++) & 0xff;
+            if (c3 == 61) 
+                return out;
+            c3 = base64DecodeChars[c3];
+        }
+        while (i < len && c3 == -1);
+        if (c3 == -1) 
+            break;
+        out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
+        /* c4 */
+        do {
+            c4 = str.charCodeAt(i++) & 0xff;
+            if (c4 == 61) 
+                return out;
+            c4 = base64DecodeChars[c4];
+        }
+        while (i < len && c4 == -1);
+        if (c4 == -1) 
+            break;
+        out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
+    }
+    return utf8to16(out);
+}
+
+/**
+ * utf8转utf16
+ * @param {Object} str
+ */
+function utf8to16(str){
+    var out, i, len, c;
+    var char2, char3;
+    out = "";
+    len = str.length;
+    i = 0;
+    while (i < len) {
+        c = str.charCodeAt(i++);
+        switch (c >> 4) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                // 0xxxxxxx
+                out += str.charAt(i - 1);
+                break;
+            case 12:
+            case 13:
+                // 110x xxxx 10xx xxxx
+                char2 = str.charCodeAt(i++);
+                out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                break;
+            case 14:
+                // 1110 xxxx10xx xxxx10xx xxxx
+                char2 = str.charCodeAt(i++);
+                char3 = str.charCodeAt(i++);
+                out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
+                break;
+        }
+    }
+    return out;
+}
+
+
+var makeQuery = function(json) {
+  var json = json || {};
+
+  var query_arr = [];
+  for (var key in json) {
+    var val = json[key];
+    query_arr.push(key + '=' + encodeURIComponent(val));
+  }
+  var query = query_arr.join('&').replace(/%20/g, '+');
+
+  return query;
+}
+
+var makeUrl = function(url, query) {
+  if (url.indexOf('?') <= 0) { 
+    return url + '?' + query;
+  } else if (query.length > 0) { 
+    return url + '&' + query;
+  } else {
+    return url
+  }
+}
+
+var empty = function() {};
+
+var ajax = function(options) {
+  var url = options.url;
+  var method = options.method || 'GET';
+  var params = options.params || {};
+  params.__ = (new Date()).getTime();
+  var success = options.success || function() {};
+  var error = options.error || function() {};
+  var timeout = options.timeout || 180000;
+  var timeoutCb = options.timeoutCb;
+  var timer = null;
+
+  if (!url) return null;
+
+  if (method == 'GET')
+    url = makeUrl(url, makeQuery(params));
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      xhr.onreadystatechange = empty;
+      clearTimeout(timer);
+      var rstext = xhr.responseText;
+      if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+        success(rstext, xhr);
+      } else {
+        error(rstext, xhr);
+      }
+    } else {
+      //console.log('xhr.readyState != 4')
+    }
+  }
+
+  if (method == 'GET') {
+    xhr.send(null);
+  } else if (method == 'POST') {
+    var query = makeQuery(params);
+    // xhr.setRequestHeader("Content-Length", query.length);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); // 使用form表单编码来发数据，注，这并不是二进制
+    xhr.send(query);
+  }
+
+  timer = setTimeout(function() {
+    if (xhr) {
+      xhr.onreadystatechange = empty;
+      xhr.abort();
+      timeoutCb(); // no rest arguments
+    }
+  }, timeout);
+  return xhr;
+}
+
+
+Date.prototype.format = function(format) {
+  var o = {
+    "M+": this.getMonth() + 1, //month
+    "D+": this.getDate(), //day
+    "H+": this.getHours(), //hour
+    "m+": this.getMinutes(), //minute
+    "s+": this.getSeconds(), //second
+    "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+    "S": this.getMilliseconds() //millisecond
+  }
+  if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(format))
+      format = format.replace(RegExp.$1,
+        RegExp.$1.length == 1 ? o[k] :
+        ("00" + o[k]).substr(("" + o[k]).length));
+  return format;
+}
+
+// val: string, seconds
+var formatCurTime = function(val) {
+  if (val) {
+    var a = new Date();
+    a.setTime(parseInt(val) * 1000);
+    return a.format('MM-DD HH:mm:ss');
+  } else {
+    return (new Date()).format('MM-DD HH:mm:ss');
+  }
+};
+
+function hasClass(obj, className) {
+  return obj.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
+
+function addClass(obj, className) {
+  if (hasClass(obj, className)) {
+    return false;
+  }
+  if (obj.className == "") {
+    obj.className = className;
+  } else {
+    obj.className += " " + className;
+  }
+}
+
+var viewingHistory = function () {
+    
+    var bodyScrollHeight = document.body.scrollHeight;
+    var bodyScrollTop = document.body.scrollTop;
+    var screenWidth = window.screen.width;
+    var screenHeight = window.screen.height;
+    var bodyWidth = document.body.clientWidth;
+    var bodyFullscreenHeight = screenHeight * bodyWidth / screenWidth;
+    var delta = bodyScrollHeight - bodyScrollTop - bodyFullscreenHeight;
+    //alert(delta)
+
+    // 在我的手机上测试，在最下面时，这个delta为9
+    if (delta > 59) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+var scroll = function() {
+  var scrollHeight = document.body.scrollHeight;
+  document.body.scrollTop = scrollHeight;
+}
+
+var addImgMsg = function(username, content, time, me, reverse) {
+	content = content || "";
+	content = emojiParser(content, emojiPath);
+  	var msgObj = document.createElement("div");
+  	addClass(msgObj, 'message clearfix');
+	var curtime = formatCurTime(time);
+	if (me) {
+      		// 如果是我自己发的
+      		addClass(msgObj, 'me');
+      		msgObj.innerHTML = "<div class=\"time\"> 我 " + curtime + "</div><div class=\"content picture\"><img src=\"" + content + "\" /></div>";
+    	} else {
+      		// 如果是别人发的
+      		addClass(msgObj, 'not-me');
+        	msgObj.innerHTML = "<div class=\"time\">" + "<span style=\"margin-right:10px\">" + username + "</span>" + curtime + "</div><div class=\"content picture\"><img src=\"" + content + "\" /></div>";
+ 
+      	}
+
+	if (reverse) {
+		prependChild($messages, msgObj);
+	}
+	else {
+		$messages.appendChild(msgObj);
+	}
+
+	msgObj.onclick = function () {
+		wx.previewImage({
+			current: content, 		// 当前显示图片的http链接
+		      	urls: [content] 		// 需要预览的图片http链接列表
+		});
+	}
+};
+
+function isExpert () {
+    if (userAccount == roomExpert && (role == "expert" || role == "service")) {
+	    return true;
+    }
+    else {
+	    return false;
+    }
+}
+
+var addMsg = function(user, username, content, time, me, reverse) {
+	content = content || "";
+	content = emojiParser(content, emojiPath);
+  	var msgObj = document.createElement("div");
+  	addClass(msgObj, 'message clearfix');
+    msgObj.setAttribute("user", user);
+    msgObj.setAttribute("username", username);
+	var curtime = formatCurTime(time);
+	if (me) {
+      		// 如果是我自己发的
+      		addClass(msgObj, 'me');
+      		msgObj.innerHTML = "<div class=\"time\"> 我 " + curtime + "</div><div class=\"content\"><span>" + content + "</span></div>";
+    	} else {
+      		// 如果是别人发的
+      		addClass(msgObj, 'not-me');
+        	msgObj.innerHTML = "<div class=\"time\">" + "<span style=\"margin-right:10px\">" + username + "</span>" + curtime + "</div><div class=\"content\"><span>" + content + "</span></div>";
+      	}
+
+	if (reverse) {
+		prependChild($messages, msgObj);
+	}
+	else {
+		$messages.appendChild(msgObj);
+	}
+ 
+    // 如果是专家或客服角色，并且是别人发来的气泡，则添加回调事件
+    if ( isExpert() && !me) {
+	    msgObj.onclick = function () {
+            var user = msgObj.getAttribute("user");
+            var username = msgObj.getAttribute("username");
+            // 赋给全局变量
+            replytouser = user;
+            replytousername = username;
+
+            // 在聊天输入框中加入@xxxx，之前的内容跟在后面
+            $message.value = '@' + username + ' ' + $message.value;
+	    //$message.disabled = false;
+
+	    }
+    }
+};
+
+var securityProcess = function (content) {
+    content = content.replace(/<script>/g, "").replace(/<\/script>/g, "");
+    //alert(content)
+    return content;
+};
+
+var sendMsg = function (content, roomId) {
+
+    content = securityProcess(content);
+
+    var extraObj = {
+        "sender_name": userNickname,
+        "fake_name": my_fake_name
+    }
+    // 如果是两种工作人员中的一种，添加这个标志
+    if ( isExpert() ) {
+        extraObj.role = role;
+    }
+    var extraData = JSON.stringify(extraObj);
+    
+	var msg = {
+		"chatType": "1",
+		"receiverId": "" + roomId,
+		"content": content,
+		"extraData": extraData
+	};
+
+	//log("ready to call gotye api to send msg");
+	IM.sendText(msg, function (ret) {
+		//log('send msg success: ' + ret);
+		// 在这里，向我方服务器发一个请求，用于记录和转发到群组
+		ajax ({
+			url: "http://223.203.225.167:6767/room_msg_proxy_from_wxweb",
+			method: "POST",
+			params: {
+				sender: userAccount,
+				sender_name: userNickname,
+                fake_name: my_fake_name,
+				room_in: "" + roomId,
+				room_name: "",
+                receiver: replytouser,
+                receiver_name: replytousername,
+				text: content,
+				type: "GotyeMessageTypeText",
+				date: ((new Date()).getTime() / 1000) + ""
+			},
+
+			success: function () {
+				//alert("send msg to room_msg_proxy_from_wxweb success");
+			},
+			error: function () {
+				//alert("send msg to room_msg_proxy_from_wxweb error");
+			}
+		});
+	}, function (ret) {
+		//log('send msg fail. ' + ret);
+	
+	});
+
+};
+
+function isIOS () {
+	if (navigator.userAgent.indexOf("iPhone") >= 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+function fixIOSFooter_step2 () {
+	$footer.style.position = "fixed";
+}
+
+function fixIOSFooter_step1 () {
+	//$footer.style.position = "relative";
+	$footer.style.position = "absolute";
+}
+
+  $sendMessage.onsubmit = function(e) {
+    var content = $message.value;
+/*    if (content.length > 200) {
+      addTooltip(_G.i18n['TEXT_TOO_LONG']);
+      return false;
+    }
+*/
+    if (content !== '') {
+      addMsg("", "我", content, null, true);
+      sendMsg(content, roomId);
+
+      $message.value = '';
+      $message.focus();
+    }
+
+    scroll();
+    if (isIOS()) {
+        fixIOSFooter_step1();
+        setTimeout(function () {scroll();}, 600);
+    }
+
+    //if (isExpert()) {
+    //	$message.disabled = true;
+    //}
+
+    //hide(_G.emots_wrapper);
+    return false;
+  }
+
+
+	//log(userAccount);
+	//log(userPwd);
+	//log(roomId);
+	IM.bind(appkey);
+	if (IM.isLogined()) {
+		// window.location.href = '/chat/page';
+		//log("logined.")	
+	}
+	else {
+		//log("not logined.")	
+	}
+
+	IM.onConnect(function(ret){
+		//log('on connect ' + ret);
+	});
+	IM.onDisconnect(function(ret){
+		//log('on disconnect ' + ret);
+	});
+	IM.onForceLogout(function(ret){
+		alert('账号在其他地方登陆');
+	});
+	
+function formatNicknameOfMsg (msg) {
+    // 从额外字段中获取用户昵称
+    var extraData = msg.extraData;
+    var extraObj = null;
+    if (extraData != null || extraData != "") {
+        try {
+            extraObj = JSON.parse(extraData);
+        }
+        catch (e) {
+            try {
+                var str = base64decode(extraData);
+                extraObj = JSON.parse(str);
+            }
+            catch (e) {
+
+
+            }
+
+        }
+
+        var nickname = "";
+        if (extraObj) {
+            // 如果是工作人员，直接显示真实昵称
+            if (extraObj.role) {
+                nickname = extraObj.sender_name;
+            }
+            else {
+                // 否则，优先显示伪名
+                if (isPrivateRoom == "true" && extraObj.fake_name) {
+                    nickname = extraObj.fake_name;
+                }
+                else if (extraObj.sender_name) {
+                    nickname = extraObj.sender_name;
+                }
+                else {
+                    nickname = "妈咪问问用户"
+                }
+            }
+
+            // 从专家工作台回复的消息，有这个东西
+            if (extraObj.target_fake_name) {
+		if (isPrivateRoom == "true") {
+                	msg.content = "【回复】@" + extraObj.target_fake_name + ": " + msg.content;
+		}
+		else {
+                	msg.content = "【回复】@" + extraObj.receiver_name + ": " + msg.content;
+		}
+            }
+        }
+
+        msg.nickname = nickname;
+    }
+    else {
+    }
+
+    
+    return msg;
+}
+
+function more_works() {
+    var $modifyNickname = document.getElementById("modify_my_nickname");
+    var $modalNickname = document.getElementById("modal_update_nickname");
+    var $updateNicknameCancel = document.getElementById("update_nickname_cancel");
+    var $updateNicknameEnsure = document.getElementById("update_nickname_ensure");
+    var $newNickname = document.getElementById("new_nickname");
+    var $currentNickname = document.getElementById("current_nickname");
+   
+    $currentNickname.textContent = userNickname;
+    $modifyNickname.onclick = function (e) {
+        $modalNickname.style.display = "block";
+	e.preventDefault();
+	e.stopPropagation();
+	return false;
+    }
+
+    $updateNicknameCancel.onclick = function () {
+        $modalNickname.style.display = "none";
+    }
+
+    $updateNicknameEnsure.onclick = function () {
+        var text = $newNickname.value;
+        if (text != '') {
+            // 内容不等于空
+            text = securityProcess(text);
+            // 发起ajax请求到服务器
+			ajax ({
+				url: "http://223.203.225.167:6767/update_nickname",
+				method: "POST",
+				params: {
+					name: userAccount,
+                    nickname: text
+				},
+				success: function (retstr) {
+				    var ret = eval("(" + retstr + ")");
+                    if (ret.success == "true") {
+                        // 将旧昵称替换为新昵称
+                        $currentNickname.textContent = text;
+			userNickname = text;
+                        setTimeout(function () {
+                            $modalNickname.style.display = "none";
+                        }, 1000);
+                    }
+				},
+				error: function () {
+					//alert("send msg to room_msg_proxy_from_wxweb error");
+				}
+			});
+        }
+    }
+}
+
+
+	// 监听聊天室消息
+	IM.onMsg([1],function(msg){
+        msg = formatNicknameOfMsg(msg);
+		if (msg.msgType == 0) {
+			// 暂只处理文本，加入界面
+        		// 添加消息到界面中
+			addMsg(msg.senderAccount, msg.nickname, msg.content, msg.sendTime);
+		}
+		else if (msg.msgType == 3) {
+			// 处理图片
+			//alert("got image.");
+			//for (var key in msg) {
+			//	alert("" + key + " - " + msg[key]);
+			//}
+			if (msg.userAccount == userAccount) {
+				addImgMsg(msg.nickname, msg.url || msg.content, msg.sendTime, true);
+			}
+			else {
+				addImgMsg(msg.nickname, msg.url || msg.content, msg.sendTime, false);
+			}
+		}
+		else {
+			// 语音消息暂时不处理，直接隐藏
+		}
+
+		// 如果没有正在看历史，就来消息滚到最下面
+		if (!viewingHistory()) {
+		    scroll();
+		}
+	});
+	
+	function getHistory(index) {
+		var numpp = 16;
+		var data = {
+			//index: index,
+			count: numpp,
+			receiverType: 1,
+			receiverId: roomId,
+			endTime: endTime
+		};
+
+		IM.res.getMsgs(data, function (ret) {
+			if (ret.length > 0) {
+				// 更新第一条时间为下次取消息的时间，以毫秒计
+				endTime = ret[0].sendTime * 1000;	
+			}
+			//alert(ret.length)
+			// ret 是一个msg对象的数组
+			for (var i=ret.length-1; i>=0; i--) {
+				var msg = ret[i];
+				msg = formatNicknameOfMsg(msg);
+				
+				//for (var key in msg) {
+				//	alert("" + key + " - " + msg[key]);
+				//}
+
+				if (msg.msgType == 0) {
+					// 暂只处理文本，加入界面
+					if (msg.senderAccount == userAccount) {
+						addMsg(msg.senderAccount, msg.nickname, msg.content, msg.sendTime, true, true);
+					}
+					else {
+						addMsg(msg.senderAccount, msg.nickname, msg.content, msg.sendTime, false, true);
+					}
+				}
+				else if (msg.msgType == 3) {
+					if (msg.senderAccount == userAccount) {
+						addImgMsg(msg.nickname, msg.content, msg.sendTime, true, true);
+					}
+					else {
+						addImgMsg(msg.nickname, msg.content, msg.sendTime, false, true);
+					}
+				}
+				else {
+					// 其它类型的消息暂不处理
+				}
+			}
+			if (index == 0) {
+				// 添加欢迎语 
+				//addMsg("咨询室小秘书", "欢迎进入育儿妈妈咨询室", null);
+				scroll();
+                // 在这里加入是否强制要求关注
+                if (forceSub == "true") {
+						ajax ({
+							url: "http://223.203.225.167:7070/check_user_subscribe",
+							method: "GET",
+							params: {
+								openid: userAccount,
+							},
+							success: function (retstr) {
+				var ret = eval("(" + retstr + ")");
+
+                                // 如果没关注
+                                if (ret.subscribe == "false") {
+                                    // 在这里，弹出浮层，里面放二维码
+                                    setTimeout(function () {
+                                        //alert("你尚未关注妈咪问问");
+				    	var sublayer = document.getElementById("subscribe_mmww_layer");
+					sublayer.style.display = "block";
+                                    }, 2000);
+                                }
+							},
+							error: function () {
+								//alert("send msg to room_msg_proxy_from_wxweb error");
+							}
+						});
+
+                }
+
+			}
+
+			historyPage += numpp;
+			
+			$loading.style.display = "none";
+			$moreMessage.style.display = "inline-block";
+		
+		}, function (ret) {
+			// log("获得历史消息错误")	
+		
+		});
+
+	}
+	
+	
+
+	if (isIOS()) {
+		$message.onblur = function () {
+		}
+		$message.onfocus = function () {
+   			// 隐藏表情框
+			$emotsWrapper.style.display = 'none';
+			fixIOSFooter_step1();
+			setTimeout(function () {scroll();}, 600);
+		}
+
+		$messages.onclick = function () {
+			$message.blur();
+			fixIOSFooter_step2();
+		}
+	}
+	else {
+		$message.onfocus = function () {
+   			// 隐藏表情框
+			$emotsWrapper.style.display = 'none';
+		}
+	}
+
+	$moreMessage.onclick = function () {
+		getHistory(historyPage);	
+	}
+
+	function prependChild(parent, newChild){
+	    if(parent.firstChild){
+	        parent.insertBefore(newChild,parent.firstChild);
+	    } else {
+	        parent.appendChild(newChild);
+	    }
+	    
+	    return parent;
+	}
+	
+	$loading.style.display = "inline-block";
+	$moreMessage.style.display = "none";
+	if (isExpert()) {
+    		$message.setAttribute('placeholder', "点击问题进行@回复");
+		//$message.disabled = true;
+	}
+
+
+	// 正式登录
+	// 这里这个account和pwd值，是由服务端渲染下来的
+	//
+	IM.login(userAccount, userPwd, function(ret) {
+		// 登录成功后，进入房间
+		//log('login success---> ' + ret);
+		IM.enterRoom(userAccount, roomId, function () {
+			//log("enter room success.")
+			addMsg("", "咨询室小秘书", welcome);
+			if (isPrivateRoom == "true") {
+				addMsg("", "咨询室小秘书", welcome_explain + my_fake_name + " 。");
+			}
+			getHistory(historyPage);
+
+            more_works();
+		}, function () {
+			//log("enter room fail.")
+		});
+	}, function(ret) {
+		//log('fail--->' + ret);
+		//登陆失败了刷新一下页面，前端重新输入用户名密码无效，demo中也是这样，所以就先用这种方法
+		//window.location.reload();
+	});
+
+	
+	var initFace = function() {
+  		var i, title;
+  		i = 0;
+  		for (var i in faceList) {
+			var title = faceList[i];
+    			var emotObj = document.createElement("a");
+   	 		emotObj.className = "emot";
+    			emotObj.title = title;
+    			emotObj.href = "javascript:;";
+    			emotObj.innerHTML = '<img xsrc="' + emojiPath  + faceList[i] + '.png" />';
+    			$emots.appendChild(emotObj);
+  		}
+
+  		var emots = $emots.childNodes;
+  		for (var i in emots) {
+    			var emotObj = emots[i];
+    			emotObj.onclick = function() {
+      				var inputText = $message.value || '';
+      				$message.value = inputText + (":" + this.title + ":");
+				// 点一次就消失掉
+      				$emotsWrapper.style.display = 'none';
+      				// 键盘起来了
+				$message.focus();
+    			}
+  		}
+	};
+
+	$showEmots.onclick = function(e) {
+    		if ($emotsWrapper.style.display == 'block') {
+   			$emotsWrapper.style.display = 'none';
+		} 
+		else {
+   			$emotsWrapper.style.display = 'block';
+
+      			if (!loaded_emot_obj) {
+         	 		var emots = $emots.childNodes;
+          			for (var i in emots) {
+              				var emotObj = emots[i];
+              				if (!emotObj.tagName || !emotObj.setAttribute) continue;//text
+              				var img = emotObj.childNodes[0];
+              				img.setAttribute('src', img.getAttribute('xsrc'));
+          			}
+          			loaded_emot_obj = true;
+      			}
+
+
+    		}
+    		return e.stopPropagation();
+  	};
+
+	initFace();
+
+	wx.config({    
+		debug: false,    
+		appId: appId,    
+		timestamp: jsTimestamp,    
+		nonceStr: nonceStr,    
+		signature: signature,    
+		jsApiList: [    
+			'checkJsApi',    
+			'chooseImage',    
+			'previewImage',    
+			'uploadImage',    
+			'getNetworkType', 
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage'
+		]    
+	});  
+ 	
+	wx.ready(function(){
+    wx.onMenuShareTimeline({
+        title: brandTitle + roomTitle + ' - ' + shortShare, // 分享标题
+        link: wxurl, // 分享链接
+        imgUrl: roomLogo, // 分享图标
+        success: function () { 
+            // 用户确认分享后执行的回调函数
+            //alert("分享成功");
+        },
+        cancel: function () { 
+            // 用户取消分享后执行的回调函数
+        }
+    });
+
+    wx.onMenuShareAppMessage({
+        title: brandTitle + roomTitle, // 分享标题
+        desc: longShare, // 分享描述
+        link: wxurl, // 分享链接
+        imgUrl: roomLogo, // 分享图标
+        type: '', // 分享类型,music、video或link，不填默认为link
+        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+        success: function () { 
+            // 用户确认分享后执行的回调函数
+            //alert("分享成功");
+        },
+        cancel: function () { 
+            // 用户取消分享后执行的回调函数
+        }
+    });
+
+	});
+
+	wx.error(function(res){
+	});
+    
+
+
+	$showCamera.onclick = function () {
+		wx.chooseImage({
+    			count: 1, 
+        		sizeType: ['compressed'],
+	    		sourceType: ['album', 'camera'],
+	        	success: function (res) {
+		        	var localIds = res.localIds; 
+				for (var i in localIds) {
+					var uri = localIds[i];
+					//addImgMsg("", uri, null, true);
+					wx.uploadImage({
+					    localId: uri,
+					    isShowProgressTips: 1,
+					    success: function (res) {
+						var serverId = res.serverId;
+						//alert(serverId);
+						// 在这里，向我方服务器发一个请求
+						ajax ({
+							url: "http://223.203.225.167:6767/room_msg_proxy_from_wxweb",
+							method: "POST",
+							params: {
+								sender: userAccount,
+								sender_name: userNickname,
+								fake_name: my_fake_name,
+								room_in: "" + roomId,
+								room_name: "",
+								text: serverId,
+								type: "GotyeMessageTypeImage",
+								date: ((new Date()).getTime() / 1000) + ""
+
+							},
+
+							success: function () {
+								//alert("send msg to room_msg_proxy_from_wxweb success");
+							},
+
+							error: function () {
+								//alert("send msg to room_msg_proxy_from_wxweb error");
+							}
+						});
+					    }
+					});
+				}
+				//scroll();
+			}
+		});
+	};
+
+}
+
+
+
+</script>
+    </body>
+
+</html>

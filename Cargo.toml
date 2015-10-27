@@ -11,13 +11,23 @@ persistent = "*"
 router = "*" 
 mount = "*" 
 staticfile = "*"
+urlencoded = "*"
+bodyparser = "*"
 
 rustorm = "*"
-r2d2 = "*"
-r2d2_postgres = "*"
-
 uuid = "*"
 chrono = "*"
 handlebars-iron = "*"
+rust-crypto = "*"
+rand = "*"
 
 
+#[[bin]]
+#name = "main"
+#path = "src/main.rs"
+
+
+
+[lib]
+name = "dbdesign"
+path = "src/dbdesign/lib.rs"
