@@ -1,3 +1,4 @@
+extern crate hyper;
 extern crate iron;
 extern crate persistent;
 extern crate router;
@@ -10,7 +11,9 @@ extern crate uuid;
 extern crate chrono;
 extern crate rustc_serialize;
 extern crate crypto;
+extern crate cookie;
 extern crate rand;
+extern crate jsonway;
 
 
 use rustorm::pool::ManagedPool;
@@ -26,6 +29,7 @@ use router::Router;
 use mount::Mount;
 use staticfile::Static;
 use persistent::Read as PersistRead;
+use rustc_serialize::json;
 
 
 // define this to use it with iron persistance cache plugin
@@ -36,7 +40,7 @@ impl Key for AppDB { type Value = ManagedPool; }
 #[macro_use] mod macros ;
 mod index;
 mod user;
-
+mod dbdesign;
 
 
 fn main() {
@@ -51,13 +55,14 @@ fn main() {
     println!("connecting to postgres: {}", db_url);
 
     // here intro rustorm pool
-    let pool = ManagedPool::init(&db_url, 4).unwrap();
+    let pool = ManagedPool::init(&db_url, 1).unwrap();
     
     // router
     let mut router = Router::new();
     router.get("/", index::index);
     //router.get("json", json_test);
     router.post("/user/register", user::register);
+    router.post("/user/login", user::login);
 
     // mount
     let mut mount = Mount::new();

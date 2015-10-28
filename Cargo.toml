@@ -6,6 +6,8 @@ authors = ["Daogang Tang <daogangtang@126.com>"]
 
 [dependencies]
 rustc-serialize = "*" 
+cookie = "0.1"
+hyper = "*"
 iron = "*"
 persistent = "*"
 router = "*" 
@@ -13,6 +15,7 @@ mount = "*"
 staticfile = "*"
 urlencoded = "*"
 bodyparser = "*"
+jsonway = "*"
 
 rustorm = "*"
 uuid = "*"
@@ -20,6 +23,7 @@ chrono = "*"
 handlebars-iron = "*"
 rust-crypto = "*"
 rand = "*"
+
 
 
 #[[bin]]
