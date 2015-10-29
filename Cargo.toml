@@ -24,6 +24,9 @@ handlebars-iron = "*"
 rust-crypto = "*"
 rand = "*"
 
+redis = "*"
+r2d2 = "*"
+r2d2_redis = "*"
 
 
 #[[bin]]

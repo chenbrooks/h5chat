@@ -15,6 +15,10 @@ extern crate cookie;
 extern crate rand;
 extern crate jsonway;
 
+extern crate r2d2;
+extern crate r2d2_redis;
+extern crate redis;
+
 
 use rustorm::pool::ManagedPool;
 
@@ -29,33 +33,51 @@ use router::Router;
 use mount::Mount;
 use staticfile::Static;
 use persistent::Read as PersistRead;
-use rustc_serialize::json;
 
+use std::default::Default;
+use r2d2_redis::RedisConnectionManager;
+
+
+// import all helper macros
+#[macro_use] mod macros ;
+mod midware;
+mod index;
+mod user;
+mod dbdesign;
 
 // define this to use it with iron persistance cache plugin
 pub struct AppDB;
 impl Key for AppDB { type Value = ManagedPool; }
 
-// import all helper macros
-#[macro_use] mod macros ;
-mod index;
-mod user;
-mod dbdesign;
 
+type RedisPool = Pool<RedisConnectionManager>;
+pub struct AppRedis;
+impl Key for AppDB { type Value = ManagedPool; }
+
+use midware::CheckLogin;
 
 fn main() {
+    // create db pool
     let db_url: String = match env::var("H5CHAT_DATABASE_URL") {
         Ok(url) => {
-            println!("{}", url);
             url
         },
         Err(_) => "postgres://postgres:123456@localhost:5432/test".to_string()
     };
-
     println!("connecting to postgres: {}", db_url);
-
-    // here intro rustorm pool
     let pool = ManagedPool::init(&db_url, 1).unwrap();
+    
+    // create redis pool
+    let redis_url: String = match env::var("H5CHAT_REDIS_URL") {
+        Ok(url) => {
+            url
+        },
+        Err(_) => "redis://localhost".to_string()
+    };
+    println!("connecting to redis: {}", redis_url);
+    let redis_config = Default::default();
+    let manager = RedisConnectionManager::new(&redis_url).unwrap();
+    let redis_pool = r2d2::Pool::new(redis_config, manager).unwrap();
     
     // router
     let mut router = Router::new();
@@ -74,6 +96,8 @@ fn main() {
     let mut middleware = Chain::new(mount);
     // put db connect pool to persistance cache
     middleware.link(PersistRead::<AppDB>::both(pool));
+    middleware.link(PersistRead::<AppRedis>::both(redis_pool));
+    middleware.link_before(CheckLogin);
 
     // http server
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);

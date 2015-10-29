@@ -6,7 +6,7 @@ use chrono::offset::utc::UTC;
 use rustorm::dao::{Dao, IsDao};
 
 use rustorm::table::IsTable;
-use rustorm::table::Column;
+//use rustorm::table::Column;
 use rustorm::table::Table;
 
 

@@ -34,7 +34,6 @@ macro_rules! t_param_default {
 
 macro_rules! res_json {
 
-    
     ($response:expr, $succ:expr, $info:expr) => ({
         
         let json_reply = jsonway::object(|j| {
