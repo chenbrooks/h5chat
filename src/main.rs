@@ -18,6 +18,7 @@ extern crate jsonway;
 extern crate r2d2;
 extern crate r2d2_redis;
 extern crate redis;
+extern crate handlebars_iron;
 
 
 use rustorm::pool::ManagedPool;
@@ -35,11 +36,14 @@ use staticfile::Static;
 use persistent::Read as PersistRead;
 
 use std::default::Default;
+use r2d2::Pool;
 use r2d2_redis::RedisConnectionManager;
-
+use redis::Commands;
+use handlebars_iron::HandlebarsEngine;
 
 // import all helper macros
 #[macro_use] mod macros ;
+mod helper;
 mod midware;
 mod index;
 mod user;
@@ -49,10 +53,9 @@ mod dbdesign;
 pub struct AppDB;
 impl Key for AppDB { type Value = ManagedPool; }
 
-
-type RedisPool = Pool<RedisConnectionManager>;
+pub type RedisPool = Pool<RedisConnectionManager>;
 pub struct AppRedis;
-impl Key for AppDB { type Value = ManagedPool; }
+impl Key for AppRedis { type Value = RedisPool; }
 
 use midware::CheckLogin;
 
@@ -72,24 +75,28 @@ fn main() {
         Ok(url) => {
             url
         },
-        Err(_) => "redis://localhost".to_string()
+        Err(_) => "redis://localhost:6379".to_string()
     };
     println!("connecting to redis: {}", redis_url);
     let redis_config = Default::default();
-    let manager = RedisConnectionManager::new(&redis_url).unwrap();
+    let manager = RedisConnectionManager::new(&redis_url[..]).unwrap();
     let redis_pool = r2d2::Pool::new(redis_config, manager).unwrap();
     
     // router
     let mut router = Router::new();
     router.get("/", index::index);
     //router.get("json", json_test);
+    //router.get("/user/register", user::register_view);
     router.post("/user/register", user::register);
+    //router.get("/user/login", user::login_view);
     router.post("/user/login", user::login);
+    router.get("/user/logout", user::logout);
 
     // mount
     let mut mount = Mount::new();
     mount.mount("/", router);
-    mount.mount("/p", Static::new(Path::new("./views/")));
+    mount.mount("/static/", Static::new(Path::new("./static/")));
+    mount.mount("/page/", Static::new(Path::new("./views/")));
 
     // middleware
     // ready to add middleware around mount entity
@@ -98,7 +105,9 @@ fn main() {
     middleware.link(PersistRead::<AppDB>::both(pool));
     middleware.link(PersistRead::<AppRedis>::both(redis_pool));
     middleware.link_before(CheckLogin);
-
+    middleware.link_after(CheckLogin);
+    //middleware.link_after(HandlebarsEngine::new("./views/", ".html"));
+    
     // http server
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
     println!("listening on http://{}", host);

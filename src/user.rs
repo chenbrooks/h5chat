@@ -1,5 +1,7 @@
 
 use std::io::Read;
+use std::ops::Deref;
+use std::collections::HashMap;
 use uuid::Uuid;
 use rand::{thread_rng, Rng};
 use chrono::offset::utc::UTC;
@@ -25,16 +27,32 @@ use iron::headers::ContentType;
 use rustc_serialize::json;
 use jsonway;
 
+use redis::Commands;
+
+use iron::modifiers::Redirect;
+use iron::Url;
 
 use dbdesign::h5manager::H5Manager;
 
 use AppDB;
+use AppRedis;
+
+use midware::UserCookie;
 
 
 fn random_string(length: usize) -> String {
     thread_rng().gen_ascii_chars().take(length).collect()
 }
 
+
+//~ pub fn register_view(req: &mut Request) -> IronResult<Response> {
+
+
+    //~ let mut data: HashMap<String, String> = HashMap::new();
+    //~ let mut resp = Response::new();
+    //~ resp.set_mut(Template::new("register", data)).set_mut(status::Ok);
+    //~ Ok(resp)
+//~ }
 
 pub fn register(req: &mut Request) -> IronResult<Response> {
     let pool = req.get::<PersistRead<AppDB>>().unwrap();
@@ -73,11 +91,24 @@ pub fn register(req: &mut Request) -> IronResult<Response> {
     
 }
 
+//~ pub fn login_view(req: &mut Request) -> IronResult<Response> {
 
+
+    //~ let mut data: HashMap<String, String> = HashMap::new();
+    //~ let mut resp = Response::new();
+    //~ resp.set_mut(Template::new("login", data)).set_mut(status::Ok);
+    //~ Ok(resp)
+//~ }
 
 pub fn login(req: &mut Request) -> IronResult<Response> {
     let pool = req.get::<PersistRead<AppDB>>().unwrap();
     let db = pool.connect().unwrap();
+    
+    let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
+    let redis_client_wr = redis_pool.get().unwrap();
+    let redis_client = redis_client_wr.deref();
+    let conn = redis_client.get_connection().unwrap();
+        
  
     let params = req.get_ref::<UrlEncodedBody>().unwrap();
     let email = t_param!(params.get("email"));
@@ -102,10 +133,14 @@ pub fn login(req: &mut Request) -> IronResult<Response> {
         if out_str == manager.password {
              // generate cookie id with uuid;
             let cookie_ident = Uuid::new_v4().to_simple_string();
-            let mut ck = CookiePair::new("h5chat_ci".to_owned(), cookie_ident);
+            let mut ck = CookiePair::new("h5chat_ci".to_owned(), cookie_ident.clone());
             ck.path = Some("/".to_owned());
             //ck.domain = Some(".h5chat.com".to_owned());
             ck.max_age = Some(3600 * 24 * 3);   // three days
+            
+            let cookie_key = "UserCookie:".to_string() + &cookie_ident;
+            let _: () = conn.set(&cookie_key[..], "1").unwrap();
+            let _: () = conn.expire(&cookie_key[..], 3600 * 24 * 3).unwrap();
             
             let mut response = Response::new();
             response.set_mut(Header(SetCookie(vec![ck])));
@@ -130,6 +165,23 @@ pub fn login(req: &mut Request) -> IronResult<Response> {
 }
 
 
+pub fn logout(req: &mut Request) -> IronResult<Response> {
+    let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
+    let redis_client_wr = redis_pool.get().unwrap();
+    let redis_client = redis_client_wr.deref();
+    let conn = redis_client.get_connection().unwrap();
+        
+    // get user's cookie
+    let cookie_ident = req.extensions.get::<UserCookie>().unwrap();
+    let cookie_key = "UserCookie:".to_string() + &cookie_ident;
+    let _: () = conn.del(&cookie_key[..]).unwrap();
+    
+    let mut response = Response::new();
+
+    let url = Url::parse("http://127.0.0.1:8080/page/index.html").unwrap();
+    response.set_mut(status::Found).set_mut(Redirect(url));
+    Ok(response)
+}
 
 
 
