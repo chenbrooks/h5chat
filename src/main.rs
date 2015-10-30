@@ -18,8 +18,6 @@ extern crate jsonway;
 extern crate r2d2;
 extern crate r2d2_redis;
 extern crate redis;
-extern crate handlebars_iron;
-
 
 use rustorm::pool::ManagedPool;
 
@@ -39,11 +37,10 @@ use std::default::Default;
 use r2d2::Pool;
 use r2d2_redis::RedisConnectionManager;
 use redis::Commands;
-use handlebars_iron::HandlebarsEngine;
 
 // import all helper macros
 #[macro_use] mod macros ;
-mod helper;
+//mod helper;
 mod midware;
 mod index;
 mod user;
@@ -85,10 +82,7 @@ fn main() {
     // router
     let mut router = Router::new();
     router.get("/", index::index);
-    //router.get("json", json_test);
-    //router.get("/user/register", user::register_view);
     router.post("/user/register", user::register);
-    //router.get("/user/login", user::login_view);
     router.post("/user/login", user::login);
     router.get("/user/logout", user::logout);
 

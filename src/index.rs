@@ -1,15 +1,8 @@
 
-use rustorm::dao::{Dao, IsDao};
-use rustorm::table::Table;
-use rustorm::table::IsTable;
-use rustorm::query::Query;
-
-
 // Iron crates
 use iron::prelude::*;
 use iron::status;
 use iron::modifiers::Redirect;
-use persistent::Read as PersistRead;
 use iron::Url;
 
 

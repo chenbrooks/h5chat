@@ -2,13 +2,9 @@ use iron::prelude::*;
 use iron::{BeforeMiddleware, AfterMiddleware, typemap};
 use iron::headers::Cookie;
 use cookie::Cookie as CookieObj;
-//use helper::{check_cookie_exist, record_user_cookie};
-use redis;
 use std::ops::Deref;
 use redis::Commands;
 
-use cookie::Cookie as CookiePair;
-use urlencoded::UrlEncodedBody;
 use persistent::Read as PersistRead;
 use iron::modifiers::Redirect;
 use iron::Url;
@@ -47,8 +43,6 @@ impl BeforeMiddleware for CheckLogin {
                 //println!("{:?}", cookie_obj);
                 let cookie_value = cookie_obj.value.clone();
                 //println!("{:?}", cookie_value);
-                // save user's cookie
-                req.extensions.insert::<UserCookie>(cookie_value);
                 
                 // pass this cookie_value to redis 
                 let cookie_key = "UserCookie:".to_string() + &cookie_value;
@@ -61,6 +55,9 @@ impl BeforeMiddleware for CheckLogin {
                     println!("not login");
                     req.extensions.insert::<CheckLogin>(false);
                 }
+                
+                // save user's cookie
+                req.extensions.insert::<UserCookie>(cookie_value);
                 
             },
             None => {

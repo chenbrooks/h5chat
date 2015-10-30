@@ -1,7 +1,6 @@
 
 use std::io::Read;
 use std::ops::Deref;
-use std::collections::HashMap;
 use uuid::Uuid;
 use rand::{thread_rng, Rng};
 use chrono::offset::utc::UTC;
