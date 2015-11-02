@@ -10,6 +10,14 @@
         <title>
             H5Chat-board
         </title>
+        <style>
+.room_item span {
+	padding: 5px;
+	
+}
+
+        </style>
+        
     </head>
     <body>
         <div class="header">
@@ -18,7 +26,7 @@
         </div>
         <div class="body">
             <div class="toolbar"><a href="/page/board/newroom.html">创建聊天室</a></div>
-            <div class="room_item_list">
+            <div class="room_item_list" id="room_item_list">
             
             </div>
         </div>
@@ -26,7 +34,7 @@
             <div> H5Chat, 超轻量级聊天平台 </div>
         </div>
         
-        
+     
         
         
     
@@ -141,7 +149,15 @@ var formatCurTime = function(val) {
   }
 };
 
+var room_item_templ = 
+'<div class="room_item"><span class="num">$num$</span>\
+<span class="room_name">$room_name$</span>\
+<span class="room_welcome">$room_welcome$</span></div>';
+
+
 window.onload = function () {
+	
+  
   
     ajax ({
         url: "http://127.0.0.1:8080/board/room/myrooms",
@@ -150,6 +166,23 @@ window.onload = function () {
         success: function (ret) {
             //alert("send msg to room_msg_proxy_from_wxweb success");
             console.log(ret);
+            var data = eval("("+ret+")");
+            console.log(data);
+            if (data.success) {
+				var rooms = data.rooms;
+				var rooms_html = [];
+				for (var i in rooms) {
+					var room = rooms[i];
+					console.log(room);
+					var room_html = room_item_templ.replace("$num$", parseInt(i)+1)
+										.replace("$room_name$", room.name)
+										.replace("$room_welcome$", room.welcome);
+					rooms_html.push(room_html);
+				}
+				console.log(rooms_html);
+				var $room_item_list = document.getElementById("room_item_list");
+				$room_item_list.innerHTML = rooms_html.join("");
+			}
         },
         error: function (ret) {
             //alert("send msg to room_msg_proxy_from_wxweb error");

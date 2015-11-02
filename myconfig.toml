@@ -1,0 +1,14 @@
+
+[h5chat] 
+
+pg_db_url = ""
+redis_url = ""
+main_port = 8080
+pool_threads = 4
+pg_db_pool_threads = 4
+redis_pool_threads = 1
+
+base_url = "http://127.0.0.1"
+#base_url = "http://h5chat.com"
+
+
