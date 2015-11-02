@@ -42,9 +42,10 @@ use redis::Commands;
 #[macro_use] mod macros ;
 //mod helper;
 mod midware;
+mod dbdesign;
 mod index;
 mod user;
-mod dbdesign;
+mod chatroom;
 
 // define this to use it with iron persistance cache plugin
 pub struct AppDB;
@@ -85,6 +86,9 @@ fn main() {
     router.post("/user/register", user::register);
     router.post("/user/login", user::login);
     router.get("/user/logout", user::logout);
+    
+    router.post("/board/room/create", chatroom::create);
+    router.get("/board/room/myrooms", chatroom::myrooms);
 
     // mount
     let mut mount = Mount::new();

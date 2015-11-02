@@ -43,6 +43,15 @@ fn random_string(length: usize) -> String {
     thread_rng().gen_ascii_chars().take(length).collect()
 }
 
+fn make_crypt_pwdstr<'a>( salt: &'a str, password: &'a str) -> String {
+    let str2test = salt.to_owned() + "_" + password;
+    let mut sh = Md5::new();
+    sh.input_str(&str2test);
+    sh.result_str()
+}
+        
+        
+
 
 //~ pub fn register_view(req: &mut Request) -> IronResult<Response> {
 
@@ -54,20 +63,20 @@ fn random_string(length: usize) -> String {
 //~ }
 
 pub fn register(req: &mut Request) -> IronResult<Response> {
-    let pool = req.get::<PersistRead<AppDB>>().unwrap();
-    let db = pool.connect().unwrap();
+    //~ let pool = req.get::<PersistRead<AppDB>>().unwrap();
+    //~ let db = pool.connect().unwrap();
+    let db = get_db!(req);
 
-    let params = req.get_ref::<UrlEncodedBody>().unwrap();
+    //let params = req.get_ref::<UrlEncodedBody>().unwrap();
+    let params = get_body_params!(req);
     let email = t_param!(params.get("email"));
     let password = t_param!(params.get("password"));
     let nickname = t_param!(params.get("nickname"));
     println!("{:?}, {:?}, {:?}", email, password, nickname);
     
     
-    let mut sh = Md5::new();
     let salt = random_string(6);
-    sh.input_str(&(salt.clone() + "_" + password));
-    let out_pwd = sh.result_str();
+    let out_pwd = make_crypt_pwdstr(&salt, &password);
     
     // generate id with uuid;
     let my_uuid = Uuid::new_v4();
@@ -84,9 +93,8 @@ pub fn register(req: &mut Request) -> IronResult<Response> {
         .set("created_time", &current_time)
         .execute(db.as_ref()).unwrap();
         
-    
-
-    Ok(Response::with((status::Ok, format!("Db is {}", "good."))))
+    //Ok(Response::with((status::Ok, format!("Db is {}", "good."))))
+    res_redirect!("/page/login.html")
     
 }
 
@@ -100,16 +108,18 @@ pub fn register(req: &mut Request) -> IronResult<Response> {
 //~ }
 
 pub fn login(req: &mut Request) -> IronResult<Response> {
-    let pool = req.get::<PersistRead<AppDB>>().unwrap();
-    let db = pool.connect().unwrap();
+    //~ let pool = req.get::<PersistRead<AppDB>>().unwrap();
+    //~ let db = pool.connect().unwrap();
+    let db = get_db!(req);
     
-    let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
-    let redis_client_wr = redis_pool.get().unwrap();
-    let redis_client = redis_client_wr.deref();
-    let conn = redis_client.get_connection().unwrap();
+    //~ let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
+    //~ let redis_client_wr = redis_pool.get().unwrap();
+    //~ let redis_client = redis_client_wr.deref();
+    //~ let conn = redis_client.get_connection().unwrap();
+    let conn = get_redis!(req);
         
- 
-    let params = req.get_ref::<UrlEncodedBody>().unwrap();
+    //let params = req.get_ref::<UrlEncodedBody>().unwrap();
+    let params = get_body_params!(req);
     let email = t_param!(params.get("email"));
     let password = t_param!(params.get("password"));
     println!("{:?}, {:?}", email, password);
@@ -125,10 +135,7 @@ pub fn login(req: &mut Request) -> IronResult<Response> {
     // if exist this user
     if let Ok(manager) = manager_result {
         
-        let str2test = manager.salt.to_owned() + "_" + password;
-        let mut sh = Md5::new();
-        sh.input_str(&str2test);
-        let out_str = sh.result_str();
+        let out_str = make_crypt_pwdstr( &manager.salt, &password);
         if out_str == manager.password {
              // generate cookie id with uuid;
             let cookie_ident = Uuid::new_v4().to_simple_string();
@@ -138,26 +145,24 @@ pub fn login(req: &mut Request) -> IronResult<Response> {
             ck.max_age = Some(3600 * 24 * 3);   // three days
             
             let cookie_key = "UserCookie:".to_string() + &cookie_ident;
-            let _: () = conn.set(&cookie_key[..], "1").unwrap();
+            // bind the cookie and the user id
+            let _: () = conn.set(&cookie_key[..], &manager.manager_id.to_hyphenated_string()[..]).unwrap();
             let _: () = conn.expire(&cookie_key[..], 3600 * 24 * 3).unwrap();
             
             let mut response = Response::new();
             response.set_mut(Header(SetCookie(vec![ck])));
 
             // 200, Set-Cookie, redirect or json
-            res_json!(response, true, "login success.")
+            res_json_success2!(response, true, "info", "login success.")
         }
         else {
-            let mut response = Response::new();
-            res_json!(response, false, "email or password not correct.")
+            res_json_success!(false, "info", "email or password not correct.")
         }
         
     }
     else {
         println!("error, no this person.");
-        //Ok(Response::with((status::Ok, "no this person.")))
-        let mut response = Response::new();
-        res_json!(response, false, "no this person.")
+        res_json_success!(false, "info", "no this person.")
     }
     
    
@@ -165,21 +170,24 @@ pub fn login(req: &mut Request) -> IronResult<Response> {
 
 
 pub fn logout(req: &mut Request) -> IronResult<Response> {
-    let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
-    let redis_client_wr = redis_pool.get().unwrap();
-    let redis_client = redis_client_wr.deref();
-    let conn = redis_client.get_connection().unwrap();
+    //~ let redis_pool = req.get::<PersistRead<AppRedis>>().unwrap();
+    //~ let redis_client_wr = redis_pool.get().unwrap();
+    //~ let redis_client = redis_client_wr.deref();
+    //~ let conn = redis_client.get_connection().unwrap();
+    let conn = get_redis!(req);
         
     // get user's cookie
-    let cookie_ident = req.extensions.get::<UserCookie>().unwrap();
+    //let cookie_ident = req.extensions.get::<UserCookie>().unwrap();
+    let cookie_ident = get_ext_param!(req, UserCookie);
     let cookie_key = "UserCookie:".to_string() + &cookie_ident;
     let _: () = conn.del(&cookie_key[..]).unwrap();
     
     let mut response = Response::new();
 
-    let url = Url::parse("http://127.0.0.1:8080/page/index.html").unwrap();
-    response.set_mut(status::Found).set_mut(Redirect(url));
-    Ok(response)
+    //~ let url = Url::parse("http://127.0.0.1:8080/page/index.html").unwrap();
+    //~ response.set_mut(status::Found).set_mut(Redirect(url));
+    //~ Ok(response)
+    res_redirect!("/page/index.html")
 }
 
 

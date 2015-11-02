@@ -1,0 +1,164 @@
+<html>
+    <meta charset="utf-8">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes"> 
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+        <meta name="keywords" content="h5chat,h5聊,伍聊" />
+        <meta name="description" content="h5chat是一个超轻量级web聊天室平台，可以方便地在手机上创建聊天室，应用于微信、微信公众号、PC网站、手机网站等场合" />
+        <title>
+            H5Chat-board
+        </title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>H5Chat-board</h1>
+            <div> <a href="/user/logout">退出登录</a></div>
+        </div>
+        <div class="body">
+            <div class="toolbar"><a href="/board/newroom.html">创建聊天室</a></div>
+            <div class="room_item_list">
+            
+            </div>
+        </div>
+        <div class="footer">
+            <div> H5Chat, 超轻量级聊天平台 </div>
+        </div>
+        
+        
+        
+        
+    
+    
+    <script type="text/javascript">
+    
+var makeQuery = function(json) {
+  var json = json || {};
+
+  var query_arr = [];
+  for (var key in json) {
+    var val = json[key];
+    query_arr.push(key + '=' + encodeURIComponent(val));
+  }
+  var query = query_arr.join('&').replace(/%20/g, '+');
+
+  return query;
+}
+
+var makeUrl = function(url, query) {
+  if (url.indexOf('?') <= 0) { 
+    return url + '?' + query;
+  } else if (query.length > 0) { 
+    return url + '&' + query;
+  } else {
+    return url
+  }
+}
+
+var empty = function() {};
+
+var ajax = function(options) {
+  var url = options.url;
+  var method = options.method || 'GET';
+  var params = options.params || {};
+  params.__ = (new Date()).getTime();
+  var success = options.success || function() {};
+  var error = options.error || function() {};
+  var timeout = options.timeout || 180000;
+  var timeoutCb = options.timeoutCb;
+  var timer = null;
+
+  if (!url) return null;
+
+  if (method == 'GET')
+    url = makeUrl(url, makeQuery(params));
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      xhr.onreadystatechange = empty;
+      clearTimeout(timer);
+      var rstext = xhr.responseText;
+      if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+        success(rstext, xhr);
+      } else {
+        error(rstext, xhr);
+      }
+    } else {
+      //console.log('xhr.readyState != 4')
+    }
+  }
+
+  if (method == 'GET') {
+    xhr.send(null);
+  } else if (method == 'POST') {
+    var query = makeQuery(params);
+    // xhr.setRequestHeader("Content-Length", query.length);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); // 使用form表单编码来发数据，注，这并不是二进制
+    xhr.send(query);
+  }
+
+  timer = setTimeout(function() {
+    if (xhr) {
+      xhr.onreadystatechange = empty;
+      xhr.abort();
+      timeoutCb(); // no rest arguments
+    }
+  }, timeout);
+  return xhr;
+}
+
+
+Date.prototype.format = function(format) {
+  var o = {
+    "M+": this.getMonth() + 1, //month
+    "D+": this.getDate(), //day
+    "H+": this.getHours(), //hour
+    "m+": this.getMinutes(), //minute
+    "s+": this.getSeconds(), //second
+    "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+    "S": this.getMilliseconds() //millisecond
+  }
+  if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(format))
+      format = format.replace(RegExp.$1,
+        RegExp.$1.length == 1 ? o[k] :
+        ("00" + o[k]).substr(("" + o[k]).length));
+  return format;
+}
+
+// val: string, seconds
+var formatCurTime = function(val) {
+  if (val) {
+    var a = new Date();
+    a.setTime(parseInt(val) * 1000);
+    return a.format('MM-DD HH:mm:ss');
+  } else {
+    return (new Date()).format('MM-DD HH:mm:ss');
+  }
+};
+
+window.onload = function () {
+    
+    ajax ({
+        url: "http://127.0.0.1:8080/board/room/myrooms",
+        method: "GET",
+        params: {},
+        success: function (ret) {
+            //alert("send msg to room_msg_proxy_from_wxweb success");
+            console.log(ret);
+        },
+        error: function (ret) {
+            //alert("send msg to room_msg_proxy_from_wxweb error");
+            console.log(ret);
+        }
+    });
+    
+}
+    </script>
+    
+    </body>
+</html>

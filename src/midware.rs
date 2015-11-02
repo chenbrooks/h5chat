@@ -9,6 +9,7 @@ use persistent::Read as PersistRead;
 use iron::modifiers::Redirect;
 use iron::Url;
 use iron::status;
+use uuid::Uuid;
 
 use AppRedis;
 
@@ -16,6 +17,9 @@ pub struct CheckLogin;
 impl typemap::Key for CheckLogin { type Value = bool; }
 pub struct UserCookie;
 impl typemap::Key for UserCookie { type Value = String; }
+pub struct ManagerId;
+impl typemap::Key for ManagerId { type Value = Uuid; }
+
 
 
 
@@ -46,10 +50,12 @@ impl BeforeMiddleware for CheckLogin {
                 
                 // pass this cookie_value to redis 
                 let cookie_key = "UserCookie:".to_string() + &cookie_value;
-                let exist = conn.get(cookie_key).unwrap_or("".to_owned());
-                if exist != "".to_owned() {
+                let manager_id = conn.get(cookie_key).unwrap_or("".to_owned());
+                if manager_id != "".to_owned() {
                     println!("has logined");
                     req.extensions.insert::<CheckLogin>(true);
+                    // retreive the uuid string from redis, convert to Uuid obj
+                    req.extensions.insert::<ManagerId>(Uuid::parse_str(&manager_id).unwrap());
                 }
                 else {
                     println!("not login");
@@ -77,13 +83,22 @@ impl AfterMiddleware for CheckLogin {
         // if logined, when click login button, enter board.html directly
         println!("{:?}", req.url.path);
         let path = &req.url.path;
-        if *logined 
-                && path[0] == "page".to_owned() 
+        if *logined && path[0] == "page".to_owned() 
                 && path[1] == "login.html".to_owned() {
             println!("I have logined");
-            let url = Url::parse("http://127.0.0.1:8080/page/board.html").unwrap();
+            let url = Url::parse("http://127.0.0.1:8080/board/index.html").unwrap();
             res.set_mut(status::Found).set_mut(Redirect(url));
         }
+        else {
+            // not logined but in board pages
+            if path[0] == "board".to_owned() {
+                let url = Url::parse("http://127.0.0.1:8080/page/index.html").unwrap();
+                res.set_mut(status::Found).set_mut(Redirect(url));
+            }
+            
+        }
+        
+        
         Ok(res)
     }
 }

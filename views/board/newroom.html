@@ -8,18 +8,25 @@
         <meta name="keywords" content="h5chat,h5聊,伍聊" />
         <meta name="description" content="h5chat是一个超轻量级web聊天室平台，可以方便地在手机上创建聊天室，应用于微信、微信公众号、PC网站、手机网站等场合" />
         <title>
-            H5Chat-board
+            H5Chat-创建新聊天室
         </title>
     </head>
     <body>
         <h1>
-            H5Chat-board  
-            
+            H5Chat-创建新聊天室
         </h1>
-        <div> <a href="/user/logout">退出登录</a></div>
-
         <p>
-hahaha
+        <form action="/board/room/create" method="post">
+            <input name="name" type="text" placeholder="名称" required="true"/> <br/>
+            <textarea name="welcome" placeholder="欢迎语" required="true">
+            </textarea>
+             <br/>
+            <input name="is_private" type="hidden" placeholder="匿名聊天" required="true" value="false" /> 
+            <input name="member_title" type="hidden" placeholder="粉丝称呼" required="true" value="H5Chatter"/> 
+            <input name="extern_url" type="hidden" placeholder="外部地址" required="true"  value=""/> 
+            
+            <input type="submit" value="提交" />
+        </form>
         </p>
     </body>
 </html>
