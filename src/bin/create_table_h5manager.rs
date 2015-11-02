@@ -16,6 +16,6 @@ fn main() {
     let pool = ManagedPool::init(&url, 1).unwrap();
     let db = pool.connect().unwrap();
     
-    db.as_ddl().create_table(&H5Manager::table());
+    //db.as_ddl().create_table(&H5Manager::table());
 }
 

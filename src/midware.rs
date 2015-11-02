@@ -83,15 +83,19 @@ impl AfterMiddleware for CheckLogin {
         // if logined, when click login button, enter board.html directly
         println!("{:?}", req.url.path);
         let path = &req.url.path;
-        if *logined && path[0] == "page".to_owned() 
+        if *logined {
+			// when logined, directly enter board view
+			if path[0] == "page".to_owned() 
                 && path[1] == "login.html".to_owned() {
-            println!("I have logined");
-            let url = Url::parse("http://127.0.0.1:8080/board/index.html").unwrap();
-            res.set_mut(status::Found).set_mut(Redirect(url));
+				println!("I have logined");
+				let url = Url::parse("http://127.0.0.1:8080/page/board/index.html").unwrap();
+				res.set_mut(status::Found).set_mut(Redirect(url));
+			}
         }
         else {
-            // not logined but in board pages
-            if path[0] == "board".to_owned() {
+            // not logined but in board pages, return to index frontpage
+            println!("{:?}", "in after ware, not login.");
+            if path[0] == "page".to_owned() && path[1] == "board".to_owned(){
                 let url = Url::parse("http://127.0.0.1:8080/page/index.html").unwrap();
                 res.set_mut(status::Found).set_mut(Redirect(url));
             }

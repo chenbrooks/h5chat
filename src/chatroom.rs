@@ -79,7 +79,7 @@ pub fn create(req: &mut Request) -> IronResult<Response> {
         .execute(db.as_ref()).unwrap();
         
     // after creating a new room, return to the main page of board
-    res_redirect!("/board/index.html")
+    res_redirect!("/page/board/index.html")
     
 }
 
@@ -87,9 +87,6 @@ pub fn create(req: &mut Request) -> IronResult<Response> {
 pub fn myrooms(req: &mut Request) -> IronResult<Response> {
     let db = get_db!(req);
     let manager_id = get_ext_param!(req, ManagerId);
-    
-    // generate id with uuid;
-    //let my_uuid = Uuid::parse_str(&manager_id).unwrap();
     
     println!("{:?}", manager_id);
     
@@ -100,33 +97,19 @@ pub fn myrooms(req: &mut Request) -> IronResult<Response> {
                              .collect(db.as_ref())
                              .unwrap();   
     
-    //~ for room in rooms {
-        //~ let name = prod.name.unwrap();
-        //~ let desc = match prod.description {
-            //~ Some(desc) => desc,
-            //~ None => "".to_string(),
-        //~ };
-        //~ println!("{}  {}  {:?}", prod.product_id, name, desc);
-    //~ }
-    //~ let json_reply = jsonway::object(|j| {
-            //~ j.set("success", true); 
-            //~ j.array("rooms", |arr| {
-                //~ for room in rooms {
-                    //~ let _room = jsonway::object(|obj| {
-                        //~ obj.set("room_id", room.room_id.to_hyphenated_string());
-                        //~ obj.set("name", room.name);
-                        //~ obj.set("welcome", room.welcome);
-                    //~ });
-                    
-                    //~ arr.push(_room);
-                //~ }
-            //~ });
-    //~ }).unwrap();
-
     let json_reply = jsonway::object(|j| {
             j.set("success", true); 
-            j.set("test", "123".to_owned()); 
-            
+            j.array("rooms", |arr| {
+                for room in &rooms {
+                    let _room = jsonway::object(|obj| {
+                        obj.set("room_id", room.room_id.to_hyphenated_string());
+                        obj.set("name", room.name.clone());
+                        obj.set("welcome", room.welcome.clone());
+                    });
+                    
+                    arr.push(_room);
+                }
+            });
     }).unwrap();
     
     println!("{:?}", json_reply);
