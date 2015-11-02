@@ -19,6 +19,7 @@ extern crate r2d2;
 extern crate r2d2_redis;
 extern crate redis;
 #[macro_use] extern crate lazy_static;
+extern crate toml;
 
 use rustorm::pool::ManagedPool;
 
@@ -42,6 +43,9 @@ use redis::Commands;
 // import all helper macros
 #[macro_use] mod macros ;
 //mod helper;
+mod config;
+use config::ConfigManager;
+
 mod midware;
 mod dbdesign;
 mod index;
@@ -60,22 +64,11 @@ use midware::CheckLogin;
 
 fn main() {
     // create db pool
-    let db_url: String = match env::var("H5CHAT_DATABASE_URL") {
-        Ok(url) => {
-            url
-        },
-        Err(_) => "postgres://postgres:123456@localhost:5432/test".to_string()
-    };
+    let db_url = ConfigManager::get_config_str("h5chat", "pg_db_url");
     println!("connecting to postgres: {}", db_url);
-    let pool = ManagedPool::init(&db_url, 1).unwrap();
-    
+    let pool = ManagedPool::init(&db_url, 4).unwrap();
     // create redis pool
-    let redis_url: String = match env::var("H5CHAT_REDIS_URL") {
-        Ok(url) => {
-            url
-        },
-        Err(_) => "redis://localhost:6379".to_string()
-    };
+    let redis_url = ConfigManager::get_config_str("h5chat", "redis_url");
     println!("connecting to redis: {}", redis_url);
     let redis_config = Default::default();
     let manager = RedisConnectionManager::new(&redis_url[..]).unwrap();

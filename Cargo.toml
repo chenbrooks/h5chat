@@ -29,6 +29,7 @@ r2d2 = "*"
 r2d2_redis = "*"
 
 lazy_static = "*"
+toml = "*"
 
 #[[bin]]
 #name = "main"
